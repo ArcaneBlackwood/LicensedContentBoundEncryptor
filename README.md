@@ -18,7 +18,7 @@ Encryption uses AES-256-GCM and a SHA-512/HKDF-based key derived from the key in
 
 # 📦 Download
 
-You can download the latest release [from the GitHub Releases page](https://github.com/ArcaneBlackwood/LicensedContentBoundEncryptor/releases).
+You can download the latest release [from the GitHub Releases page](https://github.com/ArcaneBlackwood/LicensedContentBoundEncryptor/releases/latest).
 
 ### 🛠️ Requirements
 
@@ -56,6 +56,11 @@ Encrypted file 'MyModifiedFile.lenc' info:
 ```
 
 ---
+
+### 🔧 Compiling on other platforms
+
+For all the nerds out there, shouldnt be too hard if you have experience building a C++ project.  This repo doesnt use any Windows specific code.
+You will need to make your own MakeFile, make sure to include OpenSSL, and provide GCC with locations for the dynamically linked libraries and headers.
 
 # ⚠️ Disclaimer
 
