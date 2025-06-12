@@ -1,6 +1,6 @@
 # Licensed Content Bound Encryptor
 
-**LicensedContentBoundEncryptor** is a command-line tool for encrypting and decrypting files that contain licensed, paid, or otherwise sensitive content. Encryption is bound to a *key input file*—usually the original licensed content itself—ensuring that only users who possess the correct file can decrypt and access the content.
+**LicensedContentBoundEncryptor** is a command-line tool for encrypting and decrypting files that contain licensed, paid, or otherwise sensitive content. Encryption is bound to a *key input file*, usually the original licensed content itself, ensuring that only users who possess the correct file can decrypt and access the content.
 
 ---
 
