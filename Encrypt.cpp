@@ -18,8 +18,6 @@ bool encryptMultipleWithOriginal(
 	size_t offsetInputs = 0, offsetOutputs = 0;
 	std::shared_ptr<char[]> input, output;
 	bool success = true;
-	std::cout << "#TEST 1 " << inputPaths << std::endl;
-	std::cout << "#TEST 2 " << (encryptedOutputPaths==nullptr ? "T" : "F") << std::endl;
 	while (
 		(bool)(input = splitString(inputPaths, ';', offsetInputs)) &&
 		(encryptedOutputPaths == nullptr || (bool)(output = splitString(encryptedOutputPaths, ';', offsetOutputs)))
