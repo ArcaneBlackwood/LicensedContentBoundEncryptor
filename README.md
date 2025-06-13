@@ -32,10 +32,13 @@ In your command line you can use the commands listed below.
 Note for windows, if you shift right click in the folder you have the `LicensedContentBoundEncryptor.exe` file downloaded, you can click on "Open PowerShall window here" to quickly open a terminal!
 
 Begin each command with `LicensedContentBoundEncryptor <command>` with command as:
-- `encrypt <key input file> <decrypted input file> <encrypted output file>`
-Encrypts a file using a key file (e.g., the original licensed content).  Note that if no file extension is given for encrypted output file, `*.lenc` is used by default
-- `decrypt <key input file> <encrypted input file> <decrypted output file>`
-Decrypts a file using the same key file originally used for encryption.
+- `encrypt <key input file> <decrypted input file> [encrypted output file]`
+Encrypts a file or multiuple files using a single key file (e.g., the original licensed content).  The output file is optional.  Seperate multiple files with `;`, make sure to encase in `"<files;...>"`.
+If not output file is given at all, the input file name is used with `*.lenc*` added to the end.
+Note that if no file extension is given for encrypted output file, `*.lenc` is used by default.
+- `decrypt <key input file> <encrypted input file> [decrypted output file]`
+Decrypts a file or multiple filesusing the same single key file originally used for encryption.  The output file is optional.  Seperate multiple files with `;`, make sure to encase in `"<files;...>"`.
+If no output file is given at all, the input file is used and if it ends in `*.lenc` the extension is removed.
 - `info <encrypted input file>`
 Displays metadata from an encrypted file, including the original key file name and estimated decrypted size.  Can be useful in identifying the correct key file to use.
 - `help`
@@ -48,12 +51,16 @@ Encrypts a blender file `MyModifiedFile.blend` that is modified from `SpecialSec
 - `LicensedContentBoundEncryptor decrypt SpecialSecret.blend MyModifiedFile.lenc MyModifiedFileDecrypted.blend`
 Decrypts the file from above, note that we cannot decrypt it without the original file!
 - `LicensedContentBoundEncryptor info MyModifiedFile.lenc`
-Gets information about the encrypted file.  Its output would look something like this
+Gets information about the encrypted file.  Its output would look something like this:
 ```text
 Encrypted file 'MyModifiedFile.lenc' info:
         Original key name: 'SpecialSecret.blend'
         Decrypted data size: 135MB
 ```
+- `LicensedContentBoundEncryptor encrypt SpecialSecret.blend "MyModifiedFile.blend;MyTexture.png"`
+Encrypts a blender file `MyModifiedFile.blend` and its texture `MyTexture.png` to two seperate files `MyModifiedFile.blend.lenc` and `MyTexture.png.lenc`.
+- `LicensedContentBoundEncryptor encrypt key.bin "foo.txt;bar.txt" "foo;bar.enc"`
+Encrypts a two text files `foo.txt` and `bar.txt` to two seperate files `foo.lenc` and `bar.enc` respectivly.
 
 ---
 

@@ -9,14 +9,37 @@
 #include "openssl/evp.h"
 
 
+bool decryptMultipleWithOriginal(
+	const char* originalPath,
+	const char* encryptedInputPaths,
+	const char* outputPaths) {
+	size_t offsetInputs = 0, offsetOutputs = 0;
+	std::shared_ptr<char[]> input, output;
+	bool success = true;
+	while (
+		(bool)(input = splitString(encryptedInputPaths, ';', offsetInputs)) &&
+		(outputPaths == nullptr || (bool)(output = splitString(outputPaths, ';', offsetOutputs)))
+		) {
+		if (outputPaths == nullptr)
+			output = removeExtension(input.get(), DEFAULT_EXTENSION);
+		else
+			suffixFileName(output.get(), DEFAULT_DECRYPT_PREFIX);
+		bool iterSuccess = decryptWithOriginal(originalPath, input.get(), output.get());
+		success = success && iterSuccess;
+		std::cout << ( iterSuccess ? "Successfully decrypted '" : "Failed to decrypted ''");
+		std::cout << input << "' to '" << output << "'" << std::endl;
+	}
+	return success;
+}
 bool decryptWithOriginal(
-	const std::string &originalPath,
-	const std::string &encryptedInputPath,
-	const std::string &outputPath
+	const char* originalPath,
+	const char* encryptedInputPath,
+	const char* outputPath
 ) {
 	std::ifstream origFile(originalPath, std::ios::binary);
 	std::ifstream encryptedFile(encryptedInputPath, std::ios::binary);
-	if (!origFile || !encryptedFile) {
+	std::ofstream outputFile(outputPath, std::ios::binary);
+	if (!origFile || !encryptedFile || !outputFile) {
 		std::cerr << "Failed to open one or more files." << std::endl;
 		return false;
 	}
@@ -90,12 +113,6 @@ bool decryptWithOriginal(
 
 	std::streamoff bytesRead = 0;
 	std::streamoff cipherSize = totalSize - iv.size() - 16 - origNameLen - 1;
-	std::ofstream outputFile(outputPath, std::ios::binary);
-	if (!outputFile) {
-		std::cerr << "Failed to open output file" << std::endl;
-		EVP_CIPHER_CTX_free(ctx);
-		return false;
-	}
 	while (bytesRead < cipherSize) {
 		std::streamsize toRead = std::min((std::streamoff)buffer.size(), cipherSize - bytesRead);
 		encryptedFile.read((char *)buffer.data(), toRead);
@@ -122,9 +139,8 @@ bool decryptWithOriginal(
 			}
 		}
 
-		if (proofRemaining == 0) {
-			outputFile.write((char*)outbuf.data() + offset, outlen - offset);
-		}
+		if (proofRemaining == 0)
+			outputFile.write((char *)outbuf.data() + offset, outlen - offset);
 
 		bytesRead += readLen;
 	}

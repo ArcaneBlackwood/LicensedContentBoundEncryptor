@@ -8,20 +8,32 @@
 #define MAX_FILE_PATH_SIZE 4096
 #define CRYPTO_SALT ""
 #define CRYPTO_INFO ""
+#define DEFAULT_EXTENSION ".lenc"
+#define DEFAULT_DECRYPT_PREFIX "-decrypted"
 
 #define CRYPTO_IV_SIZE 12
 
+bool decryptMultipleWithOriginal(
+	const char*  originalPath,
+	const char*  encryptedInputPaths,
+	const char*  outputPaths
+);
 bool decryptWithOriginal(
-	const std::string& originalPath,
-	const std::string& encryptedInputPath,
-	const std::string& outputPath
+	const char*  originalPath,
+	const char*  encryptedInputPath,
+	const char*  outputPath
+);
+bool encryptMultipleWithOriginal(
+	const char*  originalPath,
+	const char*  inputPaths,
+	const char*  encryptedOutputPaths
 );
 bool encryptWithOriginal(
-	const std::string& originalPath,
-	const std::string& inputPath,
-	const std::string& encryptedOutputPath
+	const char*  originalPath,
+	const char*  inputPath,
+	const char*  encryptedOutputPath
 );
-bool logEncryptedInfo(const std::string& encryptedInputPath);
+bool logEncryptedInfo(const char*  encryptedInputPath);
 
 bool hashFileSHA512(std::istream& stream, unsigned char outHash[SHA512_DIGEST_LENGTH]);
 bool deriveKeyHKDF(
@@ -29,10 +41,15 @@ bool deriveKeyHKDF(
 	unsigned char* outKey, size_t keyLen);
 
 
+
 bool strequal(const char* a, const char* b);
-std::shared_ptr<char[]> ensureFileExtension(const char* input, const char* defaultExt);
 std::shared_ptr<char[]> getFileName(const char* fullPath);
-std::string formatBytes(size_t bytes);
+std::shared_ptr<char[]> suffixFileName(const char* string, const char* suffix); 
+std::shared_ptr<char[]> splitString(const char* string, char seperator, size_t& offset);
+
+std::shared_ptr<char[]> ensureFileExtension(const char* input, const char* defaultExt);
+std::shared_ptr<char[]> appendExtension(const char* string, const char* ext);
+std::shared_ptr<char[]> removeExtension(const char* string, const char* ext);
 
 /*
 	File structure:

@@ -10,10 +10,35 @@
 #include "openssl/evp.h"
 #include "openssl/rand.h"
 
+bool encryptMultipleWithOriginal(
+	const char* originalPath,
+	const char* inputPaths,
+	const char* encryptedOutputPaths
+) {
+	size_t offsetInputs = 0, offsetOutputs = 0;
+	std::shared_ptr<char[]> input, output;
+	bool success = true;
+	std::cout << "#TEST 1 " << inputPaths << std::endl;
+	std::cout << "#TEST 2 " << (encryptedOutputPaths==nullptr ? "T" : "F") << std::endl;
+	while (
+		(bool)(input = splitString(inputPaths, ';', offsetInputs)) &&
+		(encryptedOutputPaths == nullptr || (bool)(output = splitString(encryptedOutputPaths, ';', offsetOutputs)))
+	) {
+		if (encryptedOutputPaths == nullptr)
+			output = appendExtension(input.get(), DEFAULT_EXTENSION);
+		else
+			ensureFileExtension(output.get(), DEFAULT_EXTENSION);
+		bool iterSuccess = encryptWithOriginal(originalPath, input.get(), output.get());
+		success = success && iterSuccess;
+		std::cout << ( iterSuccess ? "Successfully encrypted '" : "Failed to encrypt ''");
+		std::cout << input << "' to '" << output << "'" << std::endl;
+	}
+	return success;
+}
 bool encryptWithOriginal(
-	const std::string &originalPath,
-	const std::string &inputPath,
-	const std::string &encryptedOutputPath
+	const char* originalPath,
+	const char* inputPath,
+	const char* encryptedOutputPath
 ) {
 	std::ifstream origFile(originalPath, std::ios::binary);
 	std::ifstream inputFile(inputPath, std::ios::binary);
@@ -38,7 +63,7 @@ bool encryptWithOriginal(
 
 
 	// Write input file name
-	std::shared_ptr<char[]> origFileName = getFileName(originalPath.c_str());
+	std::shared_ptr<char[]> origFileName = getFileName(originalPath);
 	size_t keyPathSize = strnlen(origFileName.get(), MAX_FILE_PATH_SIZE);
 	assert(keyPathSize != MAX_FILE_PATH_SIZE);
 	outputFile.write((const char*)origFileName.get(), keyPathSize + 1);

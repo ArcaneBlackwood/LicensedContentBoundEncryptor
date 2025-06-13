@@ -78,12 +78,21 @@
     <ExternalIncludePath>C:\Program Files\OpenSSL-Win64\include;D:\Projects\Programming\_Libraries;$(ExternalIncludePath)</ExternalIncludePath>
     <LibraryPath>C:\Program Files\OpenSSL-Win64\lib\VC\x64\MD;D:\Projects\Programming\_Libraries\libs;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ExternalIncludePath>C:\Program Files\OpenSSL-Win64\include;D:\Projects\Programming\_Libraries;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>C:\Program Files\OpenSSL-Win64\lib\VC\x86\MD;D:\Projects\Programming\_Libraries\libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ExternalIncludePath>C:\Program Files\OpenSSL-Win64\include;D:\Projects\Programming\_Libraries;$(ExternalIncludePath)</ExternalIncludePath>
+    <LibraryPath>C:\Program Files\OpenSSL-Win64\lib\VC\x86\MD;D:\Projects\Programming\_Libraries\libs;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -98,6 +107,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,6 +156,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="main.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

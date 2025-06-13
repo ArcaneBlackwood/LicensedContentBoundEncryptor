@@ -28,13 +28,10 @@ int main(int argc, char *argv[]) {
 		//if (!decryptWithOriginal(modified, encrypted, decrypted)) return -2;
 	} else 
 #endif
-	if (argc == 5 && strequal(argv[1], "decrypt")) {
-		if (!decryptWithOriginal(argv[2], argv[3], argv[4])) return -2;
-		std::cout << "Successfully decrypted to '" << argv[4] << "'" << std::endl;
-	} else if (argc == 5 && strequal(argv[1], "encrypt")) {
-		std::shared_ptr<char[]> encrypted = ensureFileExtension(argv[4], ".lenc");
-		if (!encryptWithOriginal(argv[2], argv[3], encrypted.get())) return -3;
-		std::cout << "Successfully encrypted to '" << encrypted << "'" << std::endl;
+	if (argc == 5 || argc == 4 && strequal(argv[1], "decrypt")) {
+		if (!decryptMultipleWithOriginal(argv[2], argv[3], argc == 5 ? argv[4] : nullptr)) return -2;
+	} else if (argc == 5 || argc == 4 && strequal(argv[1], "encrypt")) {
+		if (!encryptMultipleWithOriginal(argv[2], argv[3], argc == 5 ? argv[4] : nullptr)) return -3;
 	} else if (argc == 3 && strequal(argv[1], "info")) {
 		if (!logEncryptedInfo(argv[2])) {
 			std::cerr << "Is this input file a valid encrypted file by this program?" << std::endl;
@@ -49,11 +46,17 @@ int main(int argc, char *argv[]) {
 		std::cout << "The input file may be a secret file, a licenced file or a file behind a paywall." << std::endl;
 		std::cout << "One use could be to use the original licenced/paid file as a key, and encrypt a modified file to distrubute to other users." << std::endl;
 		std::cout << std::endl << "Command usage:" << std::endl;
-		std::cout << "\t" << program << "decrypt <key input file> <encrypted input file> <decrypted output file>" << std::endl;
-		std::cout << "\t" << program << "encrypt <key input file> <decrypted input file> <encrypted output file>" << std::endl;
+		std::cout << "\t" << program << "decrypt <key input file> <encrypted input file(s)> [decrypted output file(s)]" << std::endl;
+		std::cout << "\t" << program << "encrypt <key input file> <decrypted input file(s)> [encrypted output file(s)]" << std::endl;
 		std::cout << "\t" << program << "info <encrypted input file>" << std::endl;
-		std::cout << "\t\t" << "Shows information about the input file such as estimated decrypt size and key file name at encryption.  Can be useful in identifying the correct key file to use." << std::endl;
+		std::cout << "\t\t" << "Shows information about the input file such as estimated decrypt size and key file name at encryption." << std::endl;
 		std::cout << "\t" << program << "help" << std::endl;
 	}
 	return 0;
 }
+/*
+* TODO:
+*	Default prefix fix
+*	make output argument optional.  (Uses input file for decrypt removes .lenc if exists, else uses origonal name prefixed '-decrypt'.  For encrypt appends .lenc
+* Make input encrypt/decrypt files able to take multiple files.
+*/

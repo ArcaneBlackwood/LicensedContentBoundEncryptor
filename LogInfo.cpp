@@ -6,14 +6,14 @@
 #include <iostream>
 #include <iterator>
 
-bool logEncryptedInfo(const std::string& encryptedInputPath) {
+bool logEncryptedInfo(const char* encryptedInputPath) {
 	std::ifstream encryptedFile(encryptedInputPath, std::ios::binary);
 	if (!encryptedFile) {
 		std::cerr << "Failed to open file." << std::endl;
 		return false;
 	}
 
-	std::shared_ptr<char[]> inputFileName = getFileName(encryptedInputPath.c_str());
+	std::shared_ptr<char[]> inputFileName = getFileName(encryptedInputPath);
 	std::cout << "Encrypted file '" << inputFileName << "' info:" << std::endl;
 
 	//Get file size
@@ -42,7 +42,7 @@ bool logEncryptedInfo(const std::string& encryptedInputPath) {
 		return false;
 	}
 
-	std::cout << "\tDecrypted data size: " << formatBytes(cipherSize) << std::endl;
+	std::cout << "\tDecrypted data size: " << (int)cipherSize << " bytes" << std::endl;
 
 
 	return true;
